@@ -17,5 +17,5 @@ jobs:
         id: get-version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
-      - name: Fake deploy of tag ${{ jobs.get-version.outputs.VERSION }}
+      - name: Fake deploy of tag ${{ steps.get-version.outputs.VERSION }}
         run: echo "Deployed ${{ steps.get-version.outputs.VERSION }}!"
