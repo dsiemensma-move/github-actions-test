@@ -13,9 +13,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Get the version
-        id: get-version
+      - name: Get the tag (version)
+        id: get-tag
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
-      - name: Fake deploy of tag ${{ steps.get-version.outputs.VERSION }}
-        run: echo "Deployed ${{ steps.get-version.outputs.VERSION }}!"
+      - name: Fake deploy of tag ${{ steps.get-tag.outputs.VERSION }}
+        run: echo "Deployed ${{ steps.get-tag.outputs.VERSION }}!"
