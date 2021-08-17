@@ -1,0 +1,21 @@
+name: Deploy release
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  deploy:
+    timeout-minutes: 2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get the version
+        id: get-version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+
+      - name: Fake deploy of tag ${{ jobs.get-version.outputs.VERSION }}
+        run: echo "Deployed ${{ jobs.get-version.outputs.VERSION }}!"
