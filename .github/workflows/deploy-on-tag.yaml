@@ -16,5 +16,5 @@ jobs:
         id: get-tag
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
-      - name: Fake deploy of tag ${{ steps.get-tag.outputs.VERSION }}
-        run: echo "Deployed ${{ steps.get-tag.outputs.VERSION }}!"
+      - name: BROKEN deploy of tag ${{ steps.get-tag.outputs.VERSION }}
+        run: exit 1
