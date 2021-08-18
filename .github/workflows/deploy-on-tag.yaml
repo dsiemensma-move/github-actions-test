@@ -31,7 +31,7 @@ jobs:
 
       - name: Verify whether ${{ steps.get-tag.outputs.VERSION }} is deploy branch
         env:
-          $TAGGED_BRANCHES: ${{ steps.get-tagged-branch.outputs.BRANCHES }}
+          TAGGED_BRANCHES: ${{ steps.get-tagged-branch.outputs.BRANCHES }}
           DEPLOY_BRANCH: ${{ matrix.deploy-branch }}
         run: |
           if [[ **"$TAGGED_BRANCHES"** != "$DEPLOY_BRANCH" ]]
