@@ -27,7 +27,8 @@ jobs:
         run: |
           BRANCHES=$(git branch -r --contains ${{ github.ref }})
 
-          if [[ echo $BRANCHES | grep -q "origin/${{ matrix.deploy-branch }}" ]]; then
+          if echo $BRANCHES | grep -q "origin/${{ matrix.deploy-branch }}"
+          then
             echo "::error::${{ github.ref }} does not tag a commit in the expected deployment branch (${{ matrix.deploy-branch }}), but instead in: $BRANCHES"
             exit 1
           fi
