@@ -27,7 +27,7 @@ jobs:
         # This requires "fetch-depth: 0" in the checkout
         run: |
           raw=$(git branch -r --contains ${{ github.ref }})
-          branch=${raw/origin\/} | xargs echo
+          branch=${raw/origin\/ | xargs echo}
           echo ::set-output name=BRANCH::$branch
 
       - name: Verify whether ${{ steps.get-tag.outputs.VERSION }} is deploy branch
