@@ -18,7 +18,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get tagged branch
+      - name: Get the tag (version)
+        id: get-tag
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+
+      - name: Get branch tagged in ${{ steps.get-tag.outputs.VERSION }}
         id: get-tagged-branch
         # This requires "fetch-depth: 0" in the checkout
         run: |
@@ -26,19 +30,16 @@ jobs:
           branch=${raw/origin\/}
           echo ::set-output name=BRANCH::$branch
 
-      - name: Verify whether tag is of expected branch
+      - name: Verify whether ${{ steps.get-tag.outputs.VERSION }} is deploy branch
         env:
           TAGGED_BRANCH: ${{ steps.get-tagged-branch.outputs.BRANCH }}
           DEPLOY_BRANCH: ${{ matrix.deploy-branch }}
         run: |
-          if [[ "$TAGGED_BRANCH" != "$DEPLOY_BRANCH" ]] then
-            echo "::error::Tagged branch ($TAGGED_BRANCH) mismatches expected deployment branch ($DEPLOY_BRANCH)"
+          if [[ "$TAGGED_BRANCH" != "$DEPLOY_BRANCH" ]]
+          then
+            echo "::error::Tagged branch ($TAGGED_BRANCH) mismatches expected deployment branch ($DEPLOY_BRANCH) for ${{ steps.get-tag.outputs.VERSION }}"
             exit 1
           fi
-
-      - name: Get the tag (version)
-        id: get-tag
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
       - name: Fake deploy of tag ${{ steps.get-tag.outputs.VERSION }}
         run: echo "Deployed ${{ steps.get-tag.outputs.VERSION }}!"
