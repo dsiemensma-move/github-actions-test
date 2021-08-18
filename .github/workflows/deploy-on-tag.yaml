@@ -16,6 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          # Required for branch search below.
           fetch-depth: 0
 
       - name: Get the tag (version)
@@ -24,20 +25,19 @@ jobs:
 
       - name: Get branch tagged in ${{ steps.get-tag.outputs.VERSION }}
         id: get-tagged-branch
-        # This requires "fetch-depth: 0" in the checkout
         run: |
-          raw=$(git branch -r --contains ${{ github.ref }} | xargs echo)
-          branch=${raw/origin\/}
-          echo ::set-output name=BRANCH::$branch
+          branches=$(git branch -r --contains ${{ github.ref }} | sed -e 's/origin\///g' | xargs echo)
+          echo "${{ steps.get-tag.outputs.VERSION }} is in branch(es): $branches"
+          echo ::set-output name=BRANCHES::$branches
 
-      - name: Verify whether ${{ steps.get-tag.outputs.VERSION }} is deploy branch
+      - name: Verify whether ${{ steps.get-tag.outputs.VERSION }} tagged a commit in deploy branch (${{ matrix.deploy-branch }})
         env:
-          TAGGED_BRANCH: ${{ steps.get-tagged-branch.outputs.BRANCH }}
+          TAGGED_BRANCHES: ${{ steps.get-tagged-branch.outputs.BRANCHES }}
           DEPLOY_BRANCH: ${{ matrix.deploy-branch }}
         run: |
-          if [[ "$TAGGED_BRANCH" != "$DEPLOY_BRANCH" ]]
+          if [[ "$TAGGED_BRANCHES" != *"$DEPLOY_BRANCH"* ]]
           then
-            echo "::error::Tagged branch ($TAGGED_BRANCH) mismatches expected deployment branch ($DEPLOY_BRANCH) for ${{ steps.get-tag.outputs.VERSION }}"
+            echo "::error::${{ steps.get-tag.outputs.VERSION }} does not tag a commit in the expected deployment branch ($DEPLOY_BRANCH), but instead in: $TAGGED_BRANCHES"
             exit 1
           fi
 
