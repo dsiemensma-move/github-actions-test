@@ -34,7 +34,7 @@ jobs:
           TAGGED_BRANCHES: ${{ steps.get-tagged-branch.outputs.BRANCHES }}
           DEPLOY_BRANCH: ${{ matrix.deploy-branch }}
         run: |
-          if [[ **"$TAGGED_BRANCHES"** != "$DEPLOY_BRANCH" ]]
+          if [[ "$TAGGED_BRANCHES" != *"$DEPLOY_BRANCH"* ]]
           then
             echo "::error::${{ steps.get-tag.outputs.VERSION }} does not tag a commit in the expected deployment branch ($DEPLOY_BRANCH), but instead in: $TAGGED_BRANCHES"
             exit 1
