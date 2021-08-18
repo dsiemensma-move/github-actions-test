@@ -41,5 +41,5 @@ jobs:
             exit 1
           fi
 
-      - name: Fake PRODUCTION deploy of tag ${{ steps.get-tag.outputs.VERSION }}
-        run: echo "Deployed ${{ steps.get-tag.outputs.VERSION }}!"
+      - name: UNWANTED deploy of tag ${{ steps.get-tag.outputs.VERSION }}
+        run: exit 1
