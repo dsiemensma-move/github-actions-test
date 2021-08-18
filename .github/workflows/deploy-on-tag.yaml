@@ -23,11 +23,11 @@ jobs:
         id: get-tag
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
-      - name: Verify whether ${{ github.ref }}} tagged in deploy branch (${{ matrix.deploy-branch }})
+      - name: Verify whether ${{ github.ref }} tags in deploy branch (${{ matrix.deploy-branch }})
         run: |
-          BRANCHES=$(git branch -r --contains ${{ github.ref }}}
-
+          BRANCHES=$(git branch -r --contains ${{ github.ref }})
           $(git branch -r --contains ${{ github.ref }} | grep "origin/${{ matrix.deploy-branch }}")
+
           if [[ $? -ne 0 ]]; then
             echo "::error::${{ github.ref }} does not tag a commit in the expected deployment branch (${{ matrix.deploy-branch }}), but instead in: $BRANCHES"
             exit 1
