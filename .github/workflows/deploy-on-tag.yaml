@@ -1,17 +1,38 @@
 name: Deploy release
 on:
   release:
-    branches: [main]
     types: [released]
 
 jobs:
   deploy:
     timeout-minutes: 2
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - deploy-branch: main
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get tagged branch
+        # This requires "fetch-depth: 0" in the checkout
+        run: |
+          raw=$(git branch -r --contains ${{ github.ref }})
+          branch=${raw/origin\/}
+          echo ::set-env name=TAGGED_BRANCH::$branch
+
+      - name: Verify whether tag is of expected branch
+        env:
+          DEPLOY_BRANCH: ${{ matrix.deploy-branch }}
+        run: |
+          if [[ "$TAGGED_BRANCH" != "$DEPLOY_BRANCH" ]] then
+            echo "::error::Tagged branch ($TAGGED_BRANCH) mismatches expected deployment branch ($DEPLOY_BRANCH)"
+            exit 1
+          fi
 
       - name: Get the tag (version)
         id: get-tag
