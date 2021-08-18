@@ -19,14 +19,16 @@ jobs:
           fetch-depth: 0
 
       - name: Get tagged branch
+        id: get-tagged-branch
         # This requires "fetch-depth: 0" in the checkout
         run: |
           raw=$(git branch -r --contains ${{ github.ref }})
           branch=${raw/origin\/}
-          echo ::set-env name=TAGGED_BRANCH::$branch
+          echo ::set-output name=BRANCH::$branch
 
       - name: Verify whether tag is of expected branch
         env:
+          TAGGED_BRANCH: ${{ steps.get-tagged-branch.outputs.BRANCH }}
           DEPLOY_BRANCH: ${{ matrix.deploy-branch }}
         run: |
           if [[ "$TAGGED_BRANCH" != "$DEPLOY_BRANCH" ]] then
