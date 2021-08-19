@@ -26,6 +26,7 @@ jobs:
       - name: Verify whether ${{ steps.get-version.outputs.VERSION }} tags deploy branch (${{ matrix.deploy-branch }})
         run: |
           BRANCHES=$(git branch -r --contains ${{ github.ref }})
+          echo "${{ steps.get-version.outputs.VERSION }} tags branches: $BRANCHES"
 
           if ! echo $BRANCHES | grep -q "origin/${{ matrix.deploy-branch }}"
           then
