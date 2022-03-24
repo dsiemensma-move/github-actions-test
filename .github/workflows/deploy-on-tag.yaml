@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - name: Debugging
-       run: echo ${{ github.event.base_ref }}
+       run: echo "${{ github.event.release.target_commitish }}"
 
   deploy:
-    if: github.event.base_ref == 'refs/heads/main'
+    if: github.event.release.target_commitish == 'refs/heads/main'
     timeout-minutes: 2
     runs-on: ubuntu-latest
 #    strategy:
@@ -27,9 +27,9 @@ jobs:
           # Required for branch search below.
           fetch-depth: 0
 
-      - name: Get the tag (version)
-        id: get-version
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+#      - name: Get the tag (version)
+#        id: get-version
+#        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
 #      - name: Verify whether ${{ steps.get-version.outputs.VERSION }} in (${{ matrix.deploy-branch }})
 #        run: |
