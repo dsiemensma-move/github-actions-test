@@ -8,8 +8,7 @@ jobs:
     timeout-minutes: 1
     runs-on: ubuntu-latest
     steps:
-     - name: Get the tag (version)
-       id: get-version
+     - name: Debugging
        run: echo ${{ github.event.base_ref }}
 
   deploy:
