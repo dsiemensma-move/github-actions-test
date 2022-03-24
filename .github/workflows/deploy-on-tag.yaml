@@ -5,6 +5,7 @@ on:
 
 jobs:
   deploy:
+    if: github.event.base_ref == 'refs/heads/main'
     timeout-minutes: 2
     runs-on: ubuntu-latest
     strategy:
@@ -23,17 +24,17 @@ jobs:
         id: get-version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
-      - name: Verify whether ${{ steps.get-version.outputs.VERSION }} in (${{ matrix.deploy-branch }})
-        run: |
-          BRANCHES=$(git branch -r --contains ${{ github.ref }} | xargs echo)
-          echo "${{ github.ref }} tags the following branch(es): $BRANCHES"
-
-          DEPLOY_BRANCH_REF="origin/${{ matrix.deploy-branch }}"
-          if ! echo $BRANCHES | grep -q "$DEPLOY_BRANCH_REF"
-          then
-            echo "::error::${{ github.ref }} does not tag a commit in $DEPLOY_BRANCH_REF, but in: $BRANCHES"
-            exit 1
-          fi
+#      - name: Verify whether ${{ steps.get-version.outputs.VERSION }} in (${{ matrix.deploy-branch }})
+#        run: |
+#          BRANCHES=$(git branch -r --contains ${{ github.ref }} | xargs echo)
+#          echo "${{ github.ref }} tags the following branch(es): $BRANCHES"
+#
+#          DEPLOY_BRANCH_REF="origin/${{ matrix.deploy-branch }}"
+#          if ! echo $BRANCHES | grep -q "$DEPLOY_BRANCH_REF"
+#          then
+#            echo "::error::${{ github.ref }} does not tag a commit in $DEPLOY_BRANCH_REF, but in: $BRANCHES"
+#            exit 1
+#          fi
 
       - name: UNWANTED deploy of tag ${{ steps.get-tag.outputs.VERSION }}
         run: exit 1
