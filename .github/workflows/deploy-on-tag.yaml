@@ -4,13 +4,6 @@ on:
     types: [released]
 
 jobs:
-  debug:
-    timeout-minutes: 1
-    runs-on: ubuntu-latest
-    steps:
-     - name: Debugging
-       run: echo "${{ github.event.release.target_commitish }}"
-
   deploy:
     if: github.event.release.target_commitish == 'main'
     timeout-minutes: 2
