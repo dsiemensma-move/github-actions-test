@@ -15,7 +15,6 @@ jobs:
 
       - name: Echo event data
         run: |
-          echo "github.event.head_commit.message: ${{ github.event.head_commit.message }}"
           echo "github.event.release.target_commitish: ${{ github.event.release.target_commitish }}"
           echo "github.event.release.name: ${{ github.event.release.name }}"
           echo "github.event.release.tag_name: ${{ github.event.release.tag_name }}"
