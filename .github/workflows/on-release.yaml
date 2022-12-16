@@ -20,5 +20,5 @@ jobs:
           echo "github.event.release.name: ${{ github.event.release.name }}"
           echo "github.event.release.tag_name: ${{ github.event.release.tag_name }}"
 
-      - name: "Fake deploy of release: ${{ github.event.release.tag_name }} @ ${{ github.event.release.target_commitish }}"
+      - name: 'Fake release of: ${{ github.event.release.tag_name }} @ ${{ github.event.release.target_commitish }}'
         run: exit 0
